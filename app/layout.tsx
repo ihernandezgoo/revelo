@@ -50,25 +50,27 @@ function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur">
       <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
-        <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-          <RevealMark className="size-6 text-accent" />
-          <span className="text-lg">Revelo</span>
+        <Link href="/" className="text-xl font-semibold tracking-tight">
+          Revelo
         </Link>
 
-        <div className="hidden items-center gap-8 text-sm text-muted sm:flex">
-          <Link href="/como-funciona" className="transition-colors hover:text-foreground">
-            Cómo funciona
-          </Link>
-          <Link href="/caracteristicas" className="transition-colors hover:text-foreground">
-            Características
-          </Link>
-        </div>
+        <div className="flex items-center gap-6 text-sm">
+          <div className="hidden items-center gap-6 text-muted sm:flex">
+            <Link href="/como-funciona" className="transition-colors hover:text-foreground">
+              Cómo funciona
+            </Link>
+            <Link href="/caracteristicas" className="transition-colors hover:text-foreground">
+              Características
+            </Link>
+          </div>
 
-        <div className="flex items-center gap-3 text-sm">
+          <div className="flex items-center gap-3">
+            <Suspense fallback={<AuthNavFallback />}>
+              <AuthNav />
+            </Suspense>
+          </div>
+
           <ThemeToggle />
-          <Suspense fallback={<AuthNavFallback />}>
-            <AuthNav />
-          </Suspense>
         </div>
       </nav>
     </header>
