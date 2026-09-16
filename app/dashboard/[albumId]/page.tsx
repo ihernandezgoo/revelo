@@ -48,7 +48,7 @@ export default async function AlbumPage({
     })
   );
 
-  const shareUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/a/${album.share_token}`;
+  const shareUrl = `${process.env.NEXT_PUBLIC_SITE_URL ?? "https://reveloweb.vercel.app"}/${album.share_token}`;
 
   return (
     <div className="mx-auto w-full max-w-6xl px-6 py-16">
