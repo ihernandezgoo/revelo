@@ -5,16 +5,15 @@ import { logout } from "@/app/actions/auth";
 export async function AuthNav() {
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
-  const name = data?.claims?.user_metadata?.name as string | undefined;
 
   if (data?.claims) {
     return (
       <div className="flex items-center gap-3">
         <Link
           href="/dashboard"
-          className="hidden text-muted transition-colors hover:text-foreground sm:block"
+          className="rounded-full bg-accent px-4 py-2 font-medium text-accent-foreground transition-opacity hover:opacity-90"
         >
-          Hola, {name ?? data.claims.email}
+          Mi cuenta
         </Link>
         <form action={logout}>
           <button
