@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
 import type { SharedAlbumRow } from "@/lib/supabase/types";
 import { RevealMark } from "@/app/ui/reveal-mark";
 
@@ -30,9 +31,13 @@ export default async function SharedAlbumPage({
       row.photo_id !== null && row.photo_storage_path !== null
   );
 
+  // El bucket "photos" es privado y sin acceso anónimo: get_shared_album ya
+  // validó el share_token arriba, así que usamos el cliente admin solo para
+  // firmar las URLs de las fotos que esa consulta devolvió.
+  const adminClient = createAdminClient();
   const photosWithUrls = await Promise.all(
     photos.map(async (photo) => {
-      const { data } = await supabase.storage
+      const { data } = await adminClient.storage
         .from("photos")
         .createSignedUrl(photo.photo_storage_path, 60 * 60);
       return { id: photo.photo_id, url: data?.signedUrl ?? null };
