@@ -11,14 +11,14 @@ export async function AuthNav() {
       <div className="flex items-center gap-3">
         <Link
           href="/dashboard"
-          className="rounded-full bg-accent px-4 py-2 font-medium text-accent-foreground transition-opacity hover:opacity-90"
+          className="rounded-full bg-foreground px-4 py-2 font-medium text-background transition-opacity hover:opacity-80"
         >
           Mi cuenta
         </Link>
         <form action={logout}>
           <button
             type="submit"
-            className="rounded-full border border-border px-4 py-2 font-medium transition-colors hover:bg-card"
+            className="hidden font-medium transition-colors hover:text-muted sm:block"
           >
             Salir
           </button>
@@ -31,13 +31,13 @@ export async function AuthNav() {
     <>
       <Link
         href="/login"
-        className="hidden text-muted transition-colors hover:text-foreground sm:block"
+        className="hidden font-medium transition-colors hover:text-muted sm:block"
       >
         Entrar
       </Link>
       <Link
         href="/registro"
-        className="rounded-full bg-accent px-4 py-2 font-medium text-accent-foreground transition-opacity hover:opacity-90"
+        className="rounded-full bg-foreground px-4 py-2 font-medium text-background transition-opacity hover:opacity-80"
       >
         Crear cuenta
       </Link>

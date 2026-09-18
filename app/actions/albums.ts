@@ -35,6 +35,39 @@ export async function createAlbum(
   redirect(`/dashboard/${data.id}`);
 }
 
+export type UpdateAlbumState = {
+  error?: string;
+} | null;
+
+export async function updateAlbum(
+  albumId: number,
+  _prevState: UpdateAlbumState,
+  formData: FormData
+): Promise<UpdateAlbumState> {
+  const { claims } = await verifySession();
+  const title = (formData.get("title") as string | null)?.trim();
+  const description = (formData.get("description") as string | null)?.trim() ?? null;
+
+  if (!title) {
+    return { error: "Ponle un nombre al álbum." };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("albums")
+    .update({ title, description: description || null })
+    .eq("id", albumId)
+    .eq("user_id", claims.sub);
+
+  if (error) {
+    return { error: "No se pudo guardar. Inténtalo de nuevo." };
+  }
+
+  revalidatePath(`/dashboard/${albumId}`);
+  revalidatePath("/dashboard");
+  return null;
+}
+
 export async function deleteAlbum(albumId: number) {
   await verifySession();
   const supabase = await createClient();
@@ -136,6 +169,32 @@ export async function deletePhoto(photoId: number, albumId: number) {
     await supabase.storage.from("photos").remove([photo.storage_path]);
     await supabase.from("photos").delete().eq("id", photoId);
   }
+
+  revalidatePath(`/dashboard/${albumId}`);
+}
+
+export async function deletePhotos(albumId: number, photoIds: number[]) {
+  const { claims } = await verifySession();
+
+  if (photoIds.length === 0) {
+    return;
+  }
+
+  const supabase = await createClient();
+
+  const { data: photos } = await supabase
+    .from("photos")
+    .select("storage_path")
+    .in("id", photoIds)
+    .eq("user_id", claims.sub);
+
+  if (photos && photos.length > 0) {
+    await supabase.storage
+      .from("photos")
+      .remove(photos.map((photo) => photo.storage_path));
+  }
+
+  await supabase.from("photos").delete().in("id", photoIds).eq("user_id", claims.sub);
 
   revalidatePath(`/dashboard/${albumId}`);
 }

@@ -5,6 +5,7 @@ import { Suspense } from "react";
 import { AuthNav } from "./ui/auth-nav";
 import { InlineScript } from "./ui/inline-script";
 import { RevealMark } from "./ui/reveal-mark";
+import { SiteFooter } from "./ui/site-footer";
 import { ThemeToggle } from "./ui/theme-toggle";
 import "./globals.css";
 
@@ -48,28 +49,26 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 
 function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 border-b border-border bg-background/80 backdrop-blur">
-      <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-6">
-        <Link href="/" className="text-xl font-semibold tracking-tight">
+    <header className="sticky top-0 z-50 px-4 pt-4">
+      <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between rounded-full bg-card-muted px-6">
+        <Link href="/" className="flex items-center gap-2 text-lg font-semibold">
+          <RevealMark className="size-5" />
           Revelo
         </Link>
 
-        <div className="flex items-center gap-6 text-sm">
-          <div className="hidden items-center gap-6 text-muted sm:flex">
-            <Link href="/como-funciona" className="transition-colors hover:text-foreground">
-              Cómo funciona
-            </Link>
-            <Link href="/caracteristicas" className="transition-colors hover:text-foreground">
-              Características
-            </Link>
-          </div>
+        <div className="hidden items-center gap-8 text-sm font-medium sm:flex">
+          <Link href="/como-funciona" className="transition-colors hover:text-muted">
+            Cómo funciona
+          </Link>
+          <Link href="/caracteristicas" className="transition-colors hover:text-muted">
+            Características
+          </Link>
+        </div>
 
-          <div className="flex items-center gap-3">
-            <Suspense fallback={<AuthNavFallback />}>
-              <AuthNav />
-            </Suspense>
-          </div>
-
+        <div className="flex items-center gap-3 text-sm">
+          <Suspense fallback={<AuthNavFallback />}>
+            <AuthNav />
+          </Suspense>
           <ThemeToggle />
         </div>
       </nav>
@@ -82,13 +81,13 @@ function AuthNavFallback() {
     <>
       <Link
         href="/login"
-        className="hidden text-muted transition-colors hover:text-foreground sm:block"
+        className="hidden font-medium transition-colors hover:text-muted sm:block"
       >
         Entrar
       </Link>
       <Link
         href="/registro"
-        className="rounded-full bg-accent px-4 py-2 font-medium text-accent-foreground transition-opacity hover:opacity-90"
+        className="rounded-full bg-foreground px-4 py-2 font-medium text-background transition-opacity hover:opacity-80"
       >
         Crear cuenta
       </Link>
@@ -96,16 +95,3 @@ function AuthNavFallback() {
   );
 }
 
-function SiteFooter() {
-  return (
-    <footer className="border-t border-border">
-      <div className="mx-auto flex w-full max-w-6xl flex-col items-center justify-between gap-4 px-6 py-8 text-sm text-muted sm:flex-row">
-        <div className="flex items-center gap-2">
-          <RevealMark className="size-4 text-accent" />
-          <span>Revelo</span>
-        </div>
-        <p>© {new Date().getFullYear()} Revelo. Tus recuerdos, a la luz.</p>
-      </div>
-    </footer>
-  );
-}

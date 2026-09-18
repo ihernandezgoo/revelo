@@ -6,7 +6,8 @@ import { verifySession } from "@/lib/supabase/dal";
 import { createClient } from "@/lib/supabase/server";
 import { CopyLinkButton } from "./copy-link-button";
 import { DeleteAlbumButton } from "./delete-album-button";
-import { DeletePhotoButton } from "./delete-photo-button";
+import { EditAlbumDetails } from "./edit-album-details";
+import { PhotoGallery } from "./photo-gallery";
 import { UploadPhotosForm } from "./upload-photos-form";
 
 export const metadata: Metadata = {
@@ -24,7 +25,7 @@ export default async function AlbumPage({
 
   const { data: album } = await supabase
     .from("albums")
-    .select("id, title, share_token")
+    .select("id, title, description, share_token")
     .eq("id", albumId)
     .eq("user_id", claims.sub)
     .single();
@@ -61,7 +62,11 @@ export default async function AlbumPage({
       </Link>
 
       <div className="mt-4 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
-        <h1 className="text-3xl font-semibold tracking-tight">{album.title}</h1>
+        <EditAlbumDetails
+          albumId={album.id}
+          title={album.title}
+          description={album.description}
+        />
         <div className="flex flex-wrap items-center gap-2">
           <CopyLinkButton url={shareUrl} />
           <DeleteAlbumButton albumId={album.id} />
@@ -73,23 +78,13 @@ export default async function AlbumPage({
       </div>
 
       {photosWithUrls.length > 0 ? (
-        <div className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {photosWithUrls.map((photo) =>
-            photo.url ? (
-              <div
-                key={photo.id}
-                className="group relative aspect-square overflow-hidden rounded-2xl border border-border bg-card-muted"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={photo.url}
-                  alt=""
-                  className="size-full object-cover"
-                />
-                <DeletePhotoButton photoId={photo.id} albumId={album.id} />
-              </div>
-            ) : null
-          )}
+        <div className="mt-8">
+          <PhotoGallery
+            albumId={album.id}
+            photos={photosWithUrls
+              .filter((photo) => photo.url)
+              .map((photo) => ({ id: photo.id, url: photo.url as string }))}
+          />
         </div>
       ) : (
         <div className="mt-8 flex flex-col items-center justify-center gap-4 rounded-3xl border border-dashed border-border py-24 text-center">
