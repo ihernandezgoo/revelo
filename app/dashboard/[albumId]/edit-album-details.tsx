@@ -3,6 +3,7 @@
 import { useActionState, useState } from "react";
 import { Pencil } from "lucide-react";
 import { updateAlbum } from "@/app/actions/albums";
+import { errorClass, plainFieldClass, primaryButtonClass } from "@/app/ui/form-styles";
 
 export function EditAlbumDetails({
   albumId,
@@ -19,18 +20,20 @@ export function EditAlbumDetails({
 
   if (!editing) {
     return (
-      <div className="flex items-start gap-3">
-        <div>
-          <h1 className="text-3xl font-semibold tracking-tight">{title}</h1>
-          {description && <p className="mt-1 text-muted">{description}</p>}
-        </div>
+      <div className="flex max-w-full flex-col items-start gap-4">
+        <h1 className="max-w-full text-balance break-words text-4xl font-medium leading-[1.05] tracking-tight sm:text-6xl">
+          {title}
+        </h1>
+        {description && (
+          <p className="max-w-xl text-balance text-lg text-muted">{description}</p>
+        )}
         <button
           type="button"
           onClick={() => setEditing(true)}
-          className="mt-1.5 flex shrink-0 items-center gap-1.5 rounded-full border border-border px-3 py-1.5 text-sm font-medium text-muted transition-colors hover:border-accent hover:text-foreground"
+          className="flex items-center gap-1.5 rounded-full border border-foreground/15 bg-card/60 px-4 py-2 text-sm font-medium backdrop-blur transition-colors hover:border-foreground/40"
         >
           <Pencil className="size-3.5" />
-          Editar
+          Editar detalles
         </button>
       </div>
     );
@@ -42,7 +45,7 @@ export function EditAlbumDetails({
         await formAction(formData);
         setEditing(false);
       }}
-      className="flex flex-col gap-2"
+      className="flex w-full max-w-lg flex-col gap-3 rounded-3xl bg-card p-4 shadow-xl shadow-black/5"
     >
       <input
         name="title"
@@ -50,21 +53,17 @@ export function EditAlbumDetails({
         required
         defaultValue={title}
         placeholder="Nombre del álbum"
-        className="w-full max-w-md rounded-xl border border-border bg-background px-4 py-2 text-lg font-semibold outline-none transition-colors focus:border-accent"
+        className={`${plainFieldClass} text-lg font-medium`}
       />
       <textarea
         name="description"
         defaultValue={description ?? ""}
         placeholder="Descripción (opcional)"
         rows={2}
-        className="w-full max-w-md resize-none rounded-xl border border-border bg-background px-4 py-2 text-sm outline-none transition-colors focus:border-accent"
+        className={`${plainFieldClass} resize-none`}
       />
       <div className="flex items-center gap-2">
-        <button
-          type="submit"
-          disabled={pending}
-          className="rounded-full bg-accent px-4 py-2 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
-        >
+        <button type="submit" disabled={pending} className={primaryButtonClass}>
           {pending ? "Guardando…" : "Guardar"}
         </button>
         <button
@@ -76,7 +75,7 @@ export function EditAlbumDetails({
         </button>
       </div>
       {state?.error && (
-        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className={errorClass}>
           {state.error}
         </p>
       )}

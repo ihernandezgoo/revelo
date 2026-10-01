@@ -9,6 +9,7 @@ import {
   Users,
   type LucideIcon,
 } from "lucide-react";
+import { DemoCopyLink } from "./ui/demo-copy-link";
 import { MomentsShowcase } from "./ui/moments-showcase";
 import {
   Accent,
@@ -258,15 +259,7 @@ function ShareBanner() {
             Todo el día, en <span className="font-display italic">un enlace.</span>
           </p>
 
-          <div className="flex items-center gap-3 rounded-2xl bg-card p-2 pl-4 text-foreground shadow-2xl">
-            <Link2 className="size-4 shrink-0 text-accent" />
-            <span className="truncate font-mono text-xs sm:text-sm">
-              revelo.app/8f3c2a91
-            </span>
-            <span className="shrink-0 rounded-xl bg-accent px-4 py-2 text-xs font-medium text-accent-foreground">
-              Copiar
-            </span>
-          </div>
+          <DemoCopyLink />
         </div>
       </div>
     </section>

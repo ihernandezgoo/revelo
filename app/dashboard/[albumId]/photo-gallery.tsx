@@ -46,22 +46,29 @@ export function PhotoGallery({
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted">
-          {photos.length} {photos.length === 1 ? "foto" : "fotos"}
-        </p>
+      <div className="flex items-end justify-between gap-4">
+        <h2 className="text-2xl font-medium tracking-tight">
+          {photos.length}{" "}
+          <span className="font-display text-accent italic">
+            {photos.length === 1 ? "foto" : "fotos"}
+          </span>
+        </h2>
         {photos.length > 0 && (
           <button
             type="button"
             onClick={() => (selecting ? stopSelecting() : setSelecting(true))}
-            className="text-sm font-medium text-muted transition-colors hover:text-foreground"
+            className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+              selecting
+                ? "bg-foreground text-background"
+                : "border border-foreground/15 bg-card hover:border-foreground/40"
+            }`}
           >
             {selecting ? "Cancelar" : "Seleccionar"}
           </button>
         )}
       </div>
 
-      <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-4">
         {photos.map((photo) => {
           const isSelected = selected.has(photo.id);
           if (selecting) {
@@ -70,14 +77,16 @@ export function PhotoGallery({
                 key={photo.id}
                 type="button"
                 onClick={() => toggle(photo.id)}
-                className="group relative aspect-square overflow-hidden rounded-2xl border border-border bg-card-muted text-left"
+                className={`group relative aspect-square overflow-hidden rounded-2xl bg-card-muted text-left ring-offset-2 ring-offset-background transition-shadow ${
+                  isSelected ? "ring-3 ring-accent" : ""
+                }`}
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={photo.url}
                   alt=""
-                  className={`size-full object-cover transition-opacity ${
-                    isSelected ? "opacity-70" : ""
+                  className={`size-full object-cover transition-all ${
+                    isSelected ? "scale-95 rounded-xl opacity-80" : ""
                   }`}
                 />
                 <span
@@ -96,10 +105,14 @@ export function PhotoGallery({
           return (
             <div
               key={photo.id}
-              className="relative aspect-square overflow-hidden rounded-2xl border border-border bg-card-muted"
+              className="group relative aspect-square overflow-hidden rounded-2xl bg-card-muted"
             >
               {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src={photo.url} alt="" className="size-full object-cover" />
+              <img
+                src={photo.url}
+                alt=""
+                className="size-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
             </div>
           );
         })}
@@ -107,7 +120,7 @@ export function PhotoGallery({
 
       {selecting && selected.size > 0 && (
         <div className="fixed inset-x-0 bottom-0 z-50 flex justify-center px-4 pb-6">
-          <div className="flex items-center gap-4 rounded-full border border-border bg-card px-5 py-3 shadow-lg">
+          <div className="flex items-center gap-4 rounded-full bg-ink py-2 pr-2 pl-5 text-paper shadow-2xl ring-1 ring-white/10">
             <span className="text-sm font-medium">
               {selected.size} {selected.size === 1 ? "seleccionada" : "seleccionadas"}
             </span>
