@@ -27,6 +27,7 @@ export function SiteFooter() {
           links={[
             { href: "/como-funciona", label: "Cómo funciona" },
             { href: "/caracteristicas", label: "Características" },
+            { href: "/novedades", label: "Novedades", badge: "Nuevo" },
           ]}
         />
         <FooterColumn
@@ -39,7 +40,19 @@ export function SiteFooter() {
       </div>
       <div className="mx-auto flex w-full max-w-7xl items-center justify-between border-t border-border px-6 py-6 text-xs uppercase tracking-wide text-muted">
         <span>© {new Date().getFullYear()} Revelo</span>
-        <span>Revela tus momentos</span>
+        <Link
+          href="/novedades"
+          className="group flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1.5 normal-case tracking-normal text-foreground transition-colors hover:border-accent/40"
+        >
+          <span className="relative flex size-2">
+            <span className="absolute inset-0 animate-ping rounded-full bg-accent/60" />
+            <span className="relative size-2 rounded-full bg-accent" />
+          </span>
+          <span className="font-mono">v0.6</span>
+          <span className="text-muted transition-colors group-hover:text-accent">
+            Ver novedades →
+          </span>
+        </Link>
       </div>
     </footer>
   );
@@ -50,7 +63,7 @@ function FooterColumn({
   links,
 }: {
   title: string;
-  links: { href: string; label: string }[];
+  links: { href: string; label: string; badge?: string }[];
 }) {
   return (
     <div className="flex flex-col gap-3">
@@ -59,9 +72,14 @@ function FooterColumn({
         <Link
           key={link.href}
           href={link.href}
-          className="transition-colors hover:text-muted"
+          className="flex items-center gap-2 transition-colors hover:text-muted"
         >
           {link.label}
+          {link.badge && (
+            <span className="rounded-full bg-tint px-2 py-0.5 text-[0.65rem] font-medium uppercase tracking-wide text-accent">
+              {link.badge}
+            </span>
+          )}
         </Link>
       ))}
     </div>
