@@ -15,8 +15,8 @@ export function SiteFooter() {
     <footer className="border-t border-border">
       <div className="mx-auto grid w-full max-w-7xl grid-cols-2 gap-10 px-6 py-16 text-sm sm:grid-cols-4">
         <div className="col-span-2 flex flex-col gap-3 sm:col-span-1">
-          <span className="flex items-center gap-2 text-base font-semibold uppercase tracking-tight">
-            <RevealMark className="size-4" />
+          <span className="flex items-center gap-2 text-base font-semibold tracking-tight">
+            <RevealMark className="size-7 text-accent" />
             Revelo
           </span>
           <p className="max-w-xs text-muted">Tus recuerdos, a la luz.</p>

@@ -68,6 +68,19 @@ export async function updateAlbum(
   return null;
 }
 
+export async function setAlbumRevealMode(albumId: number, revealMode: boolean) {
+  const { claims } = await verifySession();
+  const supabase = await createClient();
+
+  await supabase
+    .from("albums")
+    .update({ reveal_mode: revealMode })
+    .eq("id", albumId)
+    .eq("user_id", claims.sub);
+
+  revalidatePath(`/dashboard/${albumId}`);
+}
+
 export async function deleteAlbum(albumId: number) {
   await verifySession();
   const supabase = await createClient();

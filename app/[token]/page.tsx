@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import type { SharedAlbumRow } from "@/lib/supabase/types";
 import { RevealMark } from "@/app/ui/reveal-mark";
+import { RevealableGallery } from "./revealable-gallery";
 
 export const metadata: Metadata = {
   title: "Álbum compartido — Revelo",
@@ -25,7 +26,11 @@ export default async function SharedAlbumPage({
     notFound();
   }
 
-  const { album_title: title, album_description: description } = rows[0];
+  const {
+    album_title: title,
+    album_description: description,
+    album_reveal_mode: revealMode,
+  } = rows[0];
   const photos = rows.filter(
     (row): row is SharedAlbumRow & { photo_id: number; photo_storage_path: string } =>
       row.photo_id !== null && row.photo_storage_path !== null
@@ -57,17 +62,28 @@ export default async function SharedAlbumPage({
       {description && <p className="mt-2 text-muted">{description}</p>}
 
       {photosWithUrls.length > 0 ? (
-        <div className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
-          {photosWithUrls.map((photo) =>
-            photo.url ? (
-              <div
-                key={photo.id}
-                className="aspect-square overflow-hidden rounded-2xl border border-border bg-card-muted"
-              >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={photo.url} alt="" className="size-full object-cover" />
-              </div>
-            ) : null
+        <div className="mt-10">
+          {revealMode ? (
+            <RevealableGallery
+              albumToken={token}
+              photos={photosWithUrls
+                .filter((photo) => photo.url)
+                .map((photo) => ({ id: photo.id, url: photo.url as string }))}
+            />
+          ) : (
+            <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+              {photosWithUrls.map((photo) =>
+                photo.url ? (
+                  <div
+                    key={photo.id}
+                    className="aspect-square overflow-hidden rounded-2xl border border-border bg-card-muted"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={photo.url} alt="" className="size-full object-cover" />
+                  </div>
+                ) : null
+              )}
+            </div>
           )}
         </div>
       ) : (

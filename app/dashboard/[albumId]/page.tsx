@@ -25,7 +25,7 @@ export default async function AlbumPage({
 
   const { data: album } = await supabase
     .from("albums")
-    .select("id, title, description, share_token")
+    .select("id, title, description, share_token, reveal_mode")
     .eq("id", albumId)
     .eq("user_id", claims.sub)
     .single();
@@ -67,8 +67,12 @@ export default async function AlbumPage({
           title={album.title}
           description={album.description}
         />
-        <div className="flex flex-wrap items-center gap-2">
-          <CopyLinkButton url={shareUrl} />
+        <div className="flex flex-wrap items-start gap-2">
+          <CopyLinkButton
+            url={shareUrl}
+            albumId={album.id}
+            initialRevealMode={album.reveal_mode}
+          />
           <DeleteAlbumButton albumId={album.id} />
         </div>
       </div>

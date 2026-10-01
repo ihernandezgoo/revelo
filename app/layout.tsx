@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Instrument_Serif } from "next/font/google";
 import Link from "next/link";
 import { Suspense } from "react";
 import { AuthNav } from "./ui/auth-nav";
@@ -19,10 +19,19 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const instrumentSerif = Instrument_Serif({
+  variable: "--font-instrument-serif",
+  weight: "400",
+  style: ["normal", "italic"],
+  subsets: ["latin"],
+});
+
 export const metadata: Metadata = {
-  title: "Revelo — Revela tus fotos, revela tus momentos",
+  title: "Revelo",
   description:
     "Crea álbumes de fotos online y compártelos con un enlace público. Quien lo recibe no necesita crear cuenta.",
+  // Nombre bajo el icono al añadir la web a la pantalla de inicio en iOS.
+  appleWebApp: { title: "Revelo" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
@@ -31,7 +40,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="es"
       data-theme="light"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${instrumentSerif.variable} h-full antialiased`}
     >
       <head>
         <InlineScript
@@ -50,9 +59,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
 function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 px-4 pt-4">
-      <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between rounded-full bg-card-muted px-6">
+      <nav className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between rounded-full border border-border bg-card/80 px-3 shadow-sm shadow-black/5 backdrop-blur-md sm:pl-4">
         <Link href="/" className="flex items-center gap-2 text-lg font-semibold">
-          <RevealMark className="size-5" />
+          <RevealMark className="size-8 text-accent" />
           Revelo
         </Link>
 

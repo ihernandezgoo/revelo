@@ -4,6 +4,7 @@ export type Album = {
   title: string;
   description: string | null;
   share_token: string;
+  reveal_mode: boolean;
   created_at: string;
   updated_at: string;
 };
@@ -23,6 +24,7 @@ export type SharedAlbumRow = {
   album_id: number;
   album_title: string;
   album_description: string | null;
+  album_reveal_mode: boolean;
   photo_id: number | null;
   photo_storage_path: string | null;
   photo_caption: string | null;
