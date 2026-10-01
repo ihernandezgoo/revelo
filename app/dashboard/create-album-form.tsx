@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useRef, useState } from "react";
 import { Plus, X } from "lucide-react";
 import { createAlbum } from "@/app/actions/albums";
+import { errorClass, plainFieldClass, primaryButtonClass } from "@/app/ui/form-styles";
 
 export function CreateAlbumForm() {
   const [open, setOpen] = useState(false);
@@ -17,11 +18,7 @@ export function CreateAlbumForm() {
 
   if (!open) {
     return (
-      <button
-        type="button"
-        onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-2 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90"
-      >
+      <button type="button" onClick={() => setOpen(true)} className={primaryButtonClass}>
         <Plus className="size-4" />
         Nuevo álbum
       </button>
@@ -29,34 +26,33 @@ export function CreateAlbumForm() {
   }
 
   return (
-    <form action={formAction} className="flex flex-col gap-2">
-      <div className="flex w-full max-w-sm items-center gap-2">
+    <form
+      action={formAction}
+      className="flex w-full flex-col gap-3 rounded-3xl border border-border bg-card p-3 shadow-xl shadow-black/5 sm:w-[26rem]"
+    >
+      <div className="flex items-center gap-2">
         <input
           ref={inputRef}
           name="title"
           type="text"
           required
           placeholder="Nombre del álbum"
-          className="w-full rounded-full border border-border bg-background px-4 py-2.5 text-sm outline-none transition-colors focus:border-accent"
+          className={plainFieldClass}
         />
-        <button
-          type="submit"
-          disabled={pending}
-          className="shrink-0 rounded-full bg-accent px-5 py-2.5 text-sm font-medium text-accent-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
-        >
-          {pending ? "Creando…" : "Crear"}
-        </button>
         <button
           type="button"
           onClick={() => setOpen(false)}
           aria-label="Cancelar"
-          className="shrink-0 rounded-full p-2.5 text-muted transition-colors hover:text-foreground"
+          className="shrink-0 rounded-full p-2.5 text-muted transition-colors hover:bg-card-muted hover:text-foreground"
         >
           <X className="size-4" />
         </button>
       </div>
+      <button type="submit" disabled={pending} className={primaryButtonClass}>
+        {pending ? "Creando…" : "Crear álbum"}
+      </button>
       {state?.error && (
-        <p role="alert" className="text-sm text-red-600 dark:text-red-400">
+        <p role="alert" className={errorClass}>
           {state.error}
         </p>
       )}

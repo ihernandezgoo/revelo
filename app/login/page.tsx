@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
-import { RevealMark } from "../ui/reveal-mark";
+import { LogIn } from "lucide-react";
+import { AuthLink, AuthShell } from "../ui/auth-shell";
+import { Accent, Eyebrow } from "../ui/marketing";
 import { LoginForm } from "./login-form";
 
 export const metadata: Metadata = {
@@ -10,29 +11,22 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <div className="mx-auto flex w-full max-w-md flex-col items-center px-6 py-20 sm:py-28">
-      <Link href="/" className="flex items-center gap-2 font-semibold tracking-tight">
-        <RevealMark className="size-7 text-accent" />
-        <span className="text-xl">Revelo</span>
-      </Link>
-
-      <div className="mt-8 w-full rounded-3xl border border-border bg-card p-8">
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Entra a tu cuenta
-        </h1>
-        <p className="mt-2 text-muted">
-          Revela tus álbumes y sigue compartiendo tus momentos.
-        </p>
-
-        <LoginForm />
-      </div>
-
-      <p className="mt-6 text-sm text-muted">
-        ¿No tienes cuenta?{" "}
-        <Link href="/registro" className="font-medium text-foreground hover:text-accent">
-          Regístrate
-        </Link>
-      </p>
-    </div>
+    <AuthShell
+      eyebrow={<Eyebrow icon={LogIn}>Hola de nuevo</Eyebrow>}
+      photos={["hands", "boat", "laughing"]}
+      title={
+        <>
+          Entra a tu <Accent>cuarto oscuro</Accent>
+        </>
+      }
+      description="Revela tus álbumes y sigue compartiendo tus momentos."
+      footer={
+        <>
+          ¿No tienes cuenta? <AuthLink href="/registro">Regístrate gratis</AuthLink>
+        </>
+      }
+    >
+      <LoginForm />
+    </AuthShell>
   );
 }

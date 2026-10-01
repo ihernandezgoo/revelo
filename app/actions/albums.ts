@@ -102,21 +102,25 @@ export async function deleteAlbum(albumId: number) {
   redirect("/dashboard");
 }
 
-export type UploadPhotosState = {
-  error?: string;
-} | null;
-
-export async function uploadPhotos(
+// Los archivos los sube el navegador directamente a Storage (ver
+// upload-photos-form.tsx): un Server Action no puede recibir fotos grandes
+// por el límite de tamaño del body. Aquí solo se registran las rutas.
+export async function addPhotos(
   albumId: number,
-  _prevState: UploadPhotosState,
-  formData: FormData
-): Promise<UploadPhotosState> {
+  storagePaths: string[]
+): Promise<{ error?: string }> {
   const { claims } = await verifySession();
-  const files = formData.getAll("files") as File[];
-  const validFiles = files.filter((file) => file.size > 0);
 
-  if (validFiles.length === 0) {
-    return { error: "Elige al menos una foto." };
+  // Solo se aceptan rutas dentro de la carpeta del usuario y de este álbum:
+  // la página pública firma URLs con el cliente admin, así que no se puede
+  // permitir registrar objetos ajenos.
+  const prefix = `${claims.sub}/${albumId}/`;
+  const paths = Array.from(new Set(storagePaths)).filter(
+    (path) => path.startsWith(prefix) && !path.slice(prefix.length).includes("/")
+  );
+
+  if (paths.length === 0) {
+    return { error: "No se pudo subir ninguna foto." };
   }
 
   const supabase = await createClient();
@@ -139,32 +143,23 @@ export async function uploadPhotos(
     .order("position", { ascending: false })
     .limit(1);
 
-  let nextPosition = (existing?.[0]?.position ?? -1) + 1;
+  const firstPosition = (existing?.[0]?.position ?? -1) + 1;
 
-  for (const file of validFiles) {
-    const extension = file.name.split(".").pop() ?? "jpg";
-    const path = `${claims.sub}/${albumId}/${crypto.randomUUID()}.${extension}`;
-
-    const { error: uploadError } = await supabase.storage
-      .from("photos")
-      .upload(path, file, { contentType: file.type });
-
-    if (uploadError) {
-      continue;
-    }
-
-    await supabase.from("photos").insert({
+  const { error } = await supabase.from("photos").insert(
+    paths.map((path, i) => ({
       album_id: albumId,
       user_id: claims.sub,
       storage_path: path,
-      position: nextPosition,
-    });
+      position: firstPosition + i,
+    }))
+  );
 
-    nextPosition += 1;
+  if (error) {
+    return { error: "No se pudieron guardar las fotos. Inténtalo de nuevo." };
   }
 
   revalidatePath(`/dashboard/${albumId}`);
-  return null;
+  return {};
 }
 
 export async function deletePhoto(photoId: number, albumId: number) {

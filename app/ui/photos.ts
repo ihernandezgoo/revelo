@@ -45,6 +45,32 @@ export const photos = {
     src: unsplash("photo-1516035069371-29a1b244cc32"),
     alt: "Cámara y objetivos sobre fondo oscuro",
   },
+  // Login
+  hands: {
+    src: unsplash("photo-1520854221256-17451cc331bf"),
+    alt: "Novios cogidos de la mano",
+  },
+  boat: {
+    src: unsplash("photo-1476514525535-07fb3b4ae5f1"),
+    alt: "Barca de madera en un lago entre montañas",
+  },
+  laughing: {
+    src: unsplash("photo-1491438590914-bc09fcaaf77a"),
+    alt: "Amigas riéndose juntas",
+  },
+  // Registro
+  familyBeach: {
+    src: unsplash("photo-1475503572774-15a45e5d60b9"),
+    alt: "Familia de la mano en la orilla del mar",
+  },
+  balloons: {
+    src: unsplash("photo-1530103862676-de8c9debad1d"),
+    alt: "Globos de colores en una fiesta de cumpleaños",
+  },
+  beach: {
+    src: unsplash("photo-1507525428034-b723cf961d3e"),
+    alt: "Playa de aguas turquesa al atardecer",
+  },
 } as const;
 
 export type PhotoKey = keyof typeof photos;
